@@ -10,13 +10,12 @@ import XCTest
 @testable import CounterApp
 
 class CounterAppTests: XCTestCase {
-    let state = AppState(count: 0, errorMessage: nil)
     let mainQueue = DispatchQueue.test
     var testStore: TestStore<AppState, AppState, AppAction, AppAction, AppEnvironment>!
-    
+
     override func setUp() {
         testStore = TestStore(
-            initialState: AppState(),
+            initialState: AppState(counter: CounterState(count: 0, errorMessage: nil)),
             reducer: APP_REDUCER,
             environment: AppEnvironment(
                 mainQueue: mainQueue.eraseToAnyScheduler(),
@@ -29,47 +28,47 @@ class CounterAppTests: XCTestCase {
             )
         )
     }
-    
+
     func testCounterIncLocal() {
-        testStore.send(.incrementButtonTapped) {
-            $0.count = 1
+        testStore.send(AppAction.counter(CounterView.Action.incrementButtonTapped.feature)) {
+            $0.counter.count = 1
         }
     }
-    
+
     func testCounterDecLocal() {
-        testStore.send(.decrementButtonTapped) {
-            $0.count = -1
+        testStore.send(AppAction.counter(CounterView.Action.decrementButtonTapped.feature)) {
+            $0.counter.count = -1
         }
     }
 
 
     func testCounterIncFetch() {
-        testStore.send(.incrementButtonTappedFetch(2))
+        testStore.send(AppAction.counter(CounterView.Action.incrementButtonTappedFetch(2).feature))
         mainQueue.advance()
-        testStore.receive(.numberChangeResponse(.success(1))) {
-            $0.count = 1
+        testStore.receive(AppAction.counter(.numberChangeResponse(.success(1)))) {
+            $0.counter.count = 1
         }
         
-        testStore.send(.incrementButtonTappedFetch(2))
+        testStore.send(AppAction.counter(CounterView.Action.incrementButtonTappedFetch(2).feature))
         mainQueue.advance()
-        testStore.receive(.numberChangeResponse(.failure(ApiError()))) {
-            $0.count = 1
-            $0.errorMessage = "Sorry, you are out of range."
+        testStore.receive(AppAction.counter(.numberChangeResponse(.failure(ApiError())))) {
+            $0.counter.count = 1
+            $0.counter.errorMessage = "Sorry, you are out of range."
         }
     }
-    
+
     func testCounterDecFetch() {
-        testStore.send(.decrementButtonTappedFetch(-2))
+        testStore.send(AppAction.counter(CounterView.Action.decrementButtonTappedFetch(-2).feature))
         mainQueue.advance()
-        testStore.receive(.numberChangeResponse(.success(-1))) {
-            $0.count = -1
+        testStore.receive(AppAction.counter(.numberChangeResponse(.success(-1)))) {
+            $0.counter.count = -1
         }
         
-        testStore.send(.decrementButtonTappedFetch(-2))
+        testStore.send(AppAction.counter(CounterView.Action.decrementButtonTappedFetch(-2).feature))
         mainQueue.advance()
-        testStore.receive(.numberChangeResponse(.failure(ApiError()))) {
-            $0.count = -1
-            $0.errorMessage = "Sorry, you are out of range."
+        testStore.receive(AppAction.counter(.numberChangeResponse(.failure(ApiError())))) {
+            $0.counter.count = -1
+            $0.counter.errorMessage = "Sorry, you are out of range."
         }
     }
 }

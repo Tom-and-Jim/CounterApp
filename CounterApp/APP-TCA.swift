@@ -8,16 +8,11 @@
 import ComposableArchitecture
 
 struct AppState: Equatable {
-    var count = 0
-    var errorMessage: String?
+    var counter: CounterState
 }
 
 enum AppAction: Equatable {
-    case decrementButtonTapped
-    case incrementButtonTapped
-    case decrementButtonTappedFetch(Int)
-    case incrementButtonTappedFetch(Int)
-    case numberChangeResponse(Result<Int, ApiError>)
+    case counter(CounterAction)
 }
 
 struct ApiError: Error, Equatable {}
@@ -29,38 +24,43 @@ struct AppEnvironment {
 }
 
 let APP_REDUCER = Reducer<AppState, AppAction, AppEnvironment> { state, action, environment in
-  switch action {
-  case .decrementButtonTapped:
-    state.count -= 1
-    return .none
+    switch action {
+    case let .counter(counterAction):
+        switch counterAction {
+        case .decrementButtonTapped:
+            state.counter.count -= 1
+            return .none
 
-  case .incrementButtonTapped:
-    state.count += 1
-    return .none
+        case .incrementButtonTapped:
+            state.counter.count += 1
+            return .none
 
-  case let .decrementButtonTappedFetch(min):
-    return environment.decrement(state.count, min)
-      .receive(on: environment.mainQueue)
-      .catchToEffect(AppAction.numberChangeResponse)
-      
-  case let .incrementButtonTappedFetch(max):
-    return environment.increment(state.count, max)
-      .receive(on: environment.mainQueue)
-      .catchToEffect(AppAction.numberChangeResponse)
+        case let .decrementButtonTappedFetch(min):
+            return environment.decrement(state.counter.count, min)
+                .receive(on: environment.mainQueue)
+                .catchToEffect {
+                    AppAction.counter(CounterAction.numberChangeResponse($0))
+                }
+        case let .incrementButtonTappedFetch(max):
+            return environment.increment(state.counter.count, max)
+                .receive(on: environment.mainQueue)
+                .catchToEffect {
+                    AppAction.counter(CounterAction.numberChangeResponse($0))
+                }
+        case let .numberChangeResponse(.success(count)):
+            state.counter.count = count
+            state.counter.errorMessage = nil
+            return .none
 
-  case let .numberChangeResponse(.success(count)):
-      state.count = count
-      state.errorMessage = nil
-    return .none
-
-  case .numberChangeResponse(.failure):
-      state.errorMessage = "Sorry, you are out of range."
-    return .none
-  }
+        case .numberChangeResponse(.failure):
+            state.counter.errorMessage = "Sorry, you are out of range."
+            return .none
+        }
+    }
 }
 
 let APP_STORE = Store(
-    initialState: AppState(),
+    initialState: AppState(counter: CounterState()),
     reducer: APP_REDUCER,
     environment: AppEnvironment(
         mainQueue: .main,

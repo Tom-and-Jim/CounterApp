@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BAAF5D2428782A7B00AAAF45 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAF5D2328782A7B00AAAF45 /* Config.swift */; };
-		BAAF5D2628782B9E00AAAF45 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAF5D2528782B9E00AAAF45 /* MainView.swift */; };
+		BAAF5D2628782B9E00AAAF45 /* CounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAF5D2528782B9E00AAAF45 /* CounterView.swift */; };
 		BAAF5D2828783D6A00AAAF45 /* EditCounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAF5D2728783D6A00AAAF45 /* EditCounterView.swift */; };
 		BAAF5D2C2878483900AAAF45 /* CountAppTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAF5D2A2878437300AAAF45 /* CountAppTest.swift */; };
 		BAD93E122878267D005E5DA0 /* APP-TCA.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD93E112878267D005E5DA0 /* APP-TCA.swift */; };
@@ -37,7 +37,7 @@
 
 /* Begin PBXFileReference section */
 		BAAF5D2328782A7B00AAAF45 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
-		BAAF5D2528782B9E00AAAF45 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		BAAF5D2528782B9E00AAAF45 /* CounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterView.swift; sourceTree = "<group>"; };
 		BAAF5D2728783D6A00AAAF45 /* EditCounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCounterView.swift; sourceTree = "<group>"; };
 		BAAF5D2A2878437300AAAF45 /* CountAppTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountAppTest.swift; sourceTree = "<group>"; };
 		BAD93E112878267D005E5DA0 /* APP-TCA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APP-TCA.swift"; sourceTree = "<group>"; };
@@ -106,7 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				BAD93E112878267D005E5DA0 /* APP-TCA.swift */,
-				BAAF5D2528782B9E00AAAF45 /* MainView.swift */,
+				BAAF5D2528782B9E00AAAF45 /* CounterView.swift */,
 				D6D9B812287534FD00FB5FCD /* CounterApp.swift */,
 				D6D9B816287534FE00FB5FCD /* Assets.xcassets */,
 				BAAF5D2328782A7B00AAAF45 /* Config.swift */,
@@ -262,7 +262,7 @@
 			files = (
 				BAAF5D2428782A7B00AAAF45 /* Config.swift in Sources */,
 				BAD93E122878267D005E5DA0 /* APP-TCA.swift in Sources */,
-				BAAF5D2628782B9E00AAAF45 /* MainView.swift in Sources */,
+				BAAF5D2628782B9E00AAAF45 /* CounterView.swift in Sources */,
 				BAAF5D2828783D6A00AAAF45 /* EditCounterView.swift in Sources */,
 				D6D9B813287534FD00FB5FCD /* CounterApp.swift in Sources */,
 			);

@@ -11,7 +11,7 @@ import SwiftUI
 struct CounterApp: App {
     var body: some Scene {
         WindowGroup {
-            MainView(store: APP_STORE)
+            CounterView(store: APP_STORE.scope(state: \.counter, action: AppAction.counter))
         }
     }
 }

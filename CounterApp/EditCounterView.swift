@@ -10,8 +10,7 @@ import ComposableArchitecture
 import StoreKit
 
 struct EditCounterView: View {
-    
-    let store: Store<AppState, AppAction>
+    let store: Store<CounterState, CounterAction>
 
     var body: some View {
         WithViewStore(store) { viewStore in
@@ -52,6 +51,6 @@ struct EditCounterView: View {
 
 struct EditCounter_Previews: PreviewProvider {
     static var previews: some View {
-        EditCounterView(store: APP_STORE)
+        EditCounterView(store: APP_STORE.scope(state: \.counter, action: AppAction.counter))
     }
 }

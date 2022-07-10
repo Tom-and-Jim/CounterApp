@@ -22,20 +22,20 @@ struct EditCounterView: View {
                     Text("Local:")
                         .font(.title)
                         .padding()
-                    Button("−") {
+                    Button("-") {
                         viewStore.send(.decrementButtonTapped)
                     }.padding()
                     Button("+") { viewStore.send(.incrementButtonTapped)
                     }.padding()
                 }
                 HStack {
-                    Text("Network:")
+                    Text("Effect:")
                         .font(.title)
                         .padding()
-                    Button("−") {
+                    Button("Dec") {
                         viewStore.send(.decrementButtonTappedFetch(Config.COUNT_MIN))
                     }.padding()
-                    Button("+") { viewStore.send(.incrementButtonTappedFetch(Config.COUNT_MAX))
+                    Button("Inc") { viewStore.send(.incrementButtonTappedFetch(Config.COUNT_MAX))
                     }.padding()
                 }
                 HStack {

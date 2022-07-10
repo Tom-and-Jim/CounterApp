@@ -10,7 +10,8 @@
 		BAAF5D2428782A7B00AAAF45 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAF5D2328782A7B00AAAF45 /* Config.swift */; };
 		BAAF5D2628782B9E00AAAF45 /* CounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAF5D2528782B9E00AAAF45 /* CounterView.swift */; };
 		BAAF5D2828783D6A00AAAF45 /* EditCounterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAF5D2728783D6A00AAAF45 /* EditCounterView.swift */; };
-		BAAF5D2C2878483900AAAF45 /* CountAppTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAF5D2A2878437300AAAF45 /* CountAppTest.swift */; };
+		BAAF5D2C2878483900AAAF45 /* CounterAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAF5D2A2878437300AAAF45 /* CounterAppTests.swift */; };
+		BAAF5D71287B284100AAAF45 /* CounterAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAAF5D6F287B281400AAAF45 /* CounterAppUITests.swift */; };
 		BAD93E122878267D005E5DA0 /* APP-TCA.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD93E112878267D005E5DA0 /* APP-TCA.swift */; };
 		D6D9B813287534FD00FB5FCD /* CounterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D9B812287534FD00FB5FCD /* CounterApp.swift */; };
 		D6D9B817287534FE00FB5FCD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6D9B816287534FE00FB5FCD /* Assets.xcassets */; };
@@ -39,7 +40,8 @@
 		BAAF5D2328782A7B00AAAF45 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		BAAF5D2528782B9E00AAAF45 /* CounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterView.swift; sourceTree = "<group>"; };
 		BAAF5D2728783D6A00AAAF45 /* EditCounterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCounterView.swift; sourceTree = "<group>"; };
-		BAAF5D2A2878437300AAAF45 /* CountAppTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountAppTest.swift; sourceTree = "<group>"; };
+		BAAF5D2A2878437300AAAF45 /* CounterAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterAppTests.swift; sourceTree = "<group>"; };
+		BAAF5D6F287B281400AAAF45 /* CounterAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterAppUITests.swift; sourceTree = "<group>"; };
 		BAD93E112878267D005E5DA0 /* APP-TCA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APP-TCA.swift"; sourceTree = "<group>"; };
 		D6D9B80F287534FD00FB5FCD /* CounterApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CounterApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6D9B812287534FD00FB5FCD /* CounterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CounterApp.swift; sourceTree = "<group>"; };
@@ -78,14 +80,23 @@
 		BAAF5D292878434400AAAF45 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				BAAF5D2A2878437300AAAF45 /* CountAppTest.swift */,
+				BAAF5D2A2878437300AAAF45 /* CounterAppTests.swift */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		BAAF5D6E287B27F400AAAF45 /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				BAAF5D6F287B281400AAAF45 /* CounterAppUITests.swift */,
+			);
+			path = UITests;
 			sourceTree = "<group>";
 		};
 		D6D9B806287534FD00FB5FCD = {
 			isa = PBXGroup;
 			children = (
+				BAAF5D6E287B27F400AAAF45 /* UITests */,
 				BAAF5D292878434400AAAF45 /* Tests */,
 				D6D9B811287534FD00FB5FCD /* CounterApp */,
 				D6D9B810287534FD00FB5FCD /* Products */,
@@ -272,7 +283,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BAAF5D2C2878483900AAAF45 /* CountAppTest.swift in Sources */,
+				BAAF5D2C2878483900AAAF45 /* CounterAppTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +291,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAAF5D71287B284100AAAF45 /* CounterAppUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

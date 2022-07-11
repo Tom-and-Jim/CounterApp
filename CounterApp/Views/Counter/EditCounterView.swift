@@ -49,41 +49,6 @@ struct EditCounterView: View {
     }
 }
 
-extension EditCounterView {
-    struct State: Equatable {
-        var count = 0
-        var errorMessage: String?
-    }
-    
-    enum Action: Equatable {
-        case decrementButtonTapped
-        case incrementButtonTapped
-        case decrementButtonTappedFetch(Int)
-        case incrementButtonTappedFetch(Int)
-    }
-}
-
-extension CounterState {
-  var editView: EditCounterView.State {
-    .init(count: self.count, errorMessage: self.errorMessage)
-  }
-}
-
-extension EditCounterView.Action {
-    var feature: CounterAction {
-        switch self {
-        case .decrementButtonTapped:
-            return .decrementButtonTapped
-        case .incrementButtonTapped:
-            return .incrementButtonTapped
-        case let .decrementButtonTappedFetch(counter):
-            return .decrementButtonTappedFetch(counter)
-        case let .incrementButtonTappedFetch(counter):
-            return .incrementButtonTappedFetch(counter)
-        }
-    }
-}
-
 struct EditCounter_Previews: PreviewProvider {
     static var previews: some View {
         EditCounterView(store: APP_STORE.scope(state: \.counter, action: AppAction.counter))

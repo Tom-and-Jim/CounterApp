@@ -10,21 +10,23 @@ import XCTest
 @testable import CounterApp
 
 class CounterAppTests: XCTestCase {
-    let mainQueue = DispatchQueue.test
+    let scheduler = DispatchQueue.test
     var testStore: TestStore<AppState, AppState, AppAction, AppAction, AppEnvironment>!
 
     override func setUp() {
         testStore = TestStore(
             initialState: AppState(counter: CounterState(count: 0, errorMessage: nil)),
-            reducer: APP_REDUCER,
+            reducer: appReducer,
             environment: AppEnvironment(
-                mainQueue: mainQueue.eraseToAnyScheduler(),
-                increment: { count, max in
-                    count + 1 < max ? Effect(value: count + 1) : Effect(error: ApiError())
-                },
-                decrement: { count, min in
-                    count - 1 > min ? Effect(value: count - 1) : Effect(error: ApiError())
-                }
+                counter: CounterEnvironment(
+                    mainQueue: scheduler.eraseToAnyScheduler(),
+                    increment: { count, max in
+                        count + 1 < max ? Effect(value: count + 1) : Effect(error: ApiError())
+                    },
+                    decrement: { count, min in
+                        count - 1 > min ? Effect(value: count - 1) : Effect(error: ApiError())
+                    }
+                )
             )
         )
     }
@@ -44,13 +46,13 @@ class CounterAppTests: XCTestCase {
 
     func testCounterIncFetch() {
         testStore.send(AppAction.counter(EditCounterView.Action.incrementButtonTappedFetch(2).feature))
-        mainQueue.advance()
+        scheduler.advance()
         testStore.receive(AppAction.counter(.numberChangeResponse(.success(1)))) {
             $0.counter.count = 1
         }
         
         testStore.send(AppAction.counter(EditCounterView.Action.incrementButtonTappedFetch(2).feature))
-        mainQueue.advance()
+        scheduler.advance()
         testStore.receive(AppAction.counter(.numberChangeResponse(.failure(ApiError())))) {
             $0.counter.count = 1
             $0.counter.errorMessage = "Sorry, you are out of range."
@@ -59,13 +61,13 @@ class CounterAppTests: XCTestCase {
 
     func testCounterDecFetch() {
         testStore.send(AppAction.counter(EditCounterView.Action.decrementButtonTappedFetch(-2).feature))
-        mainQueue.advance()
+        scheduler.advance()
         testStore.receive(AppAction.counter(.numberChangeResponse(.success(-1)))) {
             $0.counter.count = -1
         }
         
         testStore.send(AppAction.counter(EditCounterView.Action.decrementButtonTappedFetch(-2).feature))
-        mainQueue.advance()
+        scheduler.advance()
         testStore.receive(AppAction.counter(.numberChangeResponse(.failure(ApiError())))) {
             $0.counter.count = -1
             $0.counter.errorMessage = "Sorry, you are out of range."

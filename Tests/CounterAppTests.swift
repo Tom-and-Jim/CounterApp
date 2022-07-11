@@ -30,26 +30,26 @@ class CounterAppTests: XCTestCase {
     }
 
     func testCounterIncLocal() {
-        testStore.send(AppAction.counter(CounterView.Action.incrementButtonTapped.feature)) {
+        testStore.send(AppAction.counter(EditCounterView.Action.incrementButtonTapped.feature)) {
             $0.counter.count = 1
         }
     }
 
     func testCounterDecLocal() {
-        testStore.send(AppAction.counter(CounterView.Action.decrementButtonTapped.feature)) {
+        testStore.send(AppAction.counter(EditCounterView.Action.decrementButtonTapped.feature)) {
             $0.counter.count = -1
         }
     }
 
 
     func testCounterIncFetch() {
-        testStore.send(AppAction.counter(CounterView.Action.incrementButtonTappedFetch(2).feature))
+        testStore.send(AppAction.counter(EditCounterView.Action.incrementButtonTappedFetch(2).feature))
         mainQueue.advance()
         testStore.receive(AppAction.counter(.numberChangeResponse(.success(1)))) {
             $0.counter.count = 1
         }
         
-        testStore.send(AppAction.counter(CounterView.Action.incrementButtonTappedFetch(2).feature))
+        testStore.send(AppAction.counter(EditCounterView.Action.incrementButtonTappedFetch(2).feature))
         mainQueue.advance()
         testStore.receive(AppAction.counter(.numberChangeResponse(.failure(ApiError())))) {
             $0.counter.count = 1
@@ -58,13 +58,13 @@ class CounterAppTests: XCTestCase {
     }
 
     func testCounterDecFetch() {
-        testStore.send(AppAction.counter(CounterView.Action.decrementButtonTappedFetch(-2).feature))
+        testStore.send(AppAction.counter(EditCounterView.Action.decrementButtonTappedFetch(-2).feature))
         mainQueue.advance()
         testStore.receive(AppAction.counter(.numberChangeResponse(.success(-1)))) {
             $0.counter.count = -1
         }
         
-        testStore.send(AppAction.counter(CounterView.Action.decrementButtonTappedFetch(-2).feature))
+        testStore.send(AppAction.counter(EditCounterView.Action.decrementButtonTappedFetch(-2).feature))
         mainQueue.advance()
         testStore.receive(AppAction.counter(.numberChangeResponse(.failure(ApiError())))) {
             $0.counter.count = -1

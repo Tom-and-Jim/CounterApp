@@ -26,7 +26,7 @@ struct CounterView: View {
     let store: Store<CounterState, CounterAction>
     
     var body: some View {
-        WithViewStore(store.scope(state: \.view, action: \CounterView.Action.feature)) { viewStore in
+        WithViewStore(store.scope(state: \.view)) { viewStore in
             NavigationView {
                 VStack {
                     Text("\(viewStore.count)")
@@ -42,36 +42,13 @@ struct CounterView: View {
 extension CounterView {
     struct State: Equatable {
         var count = 0
-        var errorMessage: String?
-    }
-    
-    enum Action: Equatable {
-        case decrementButtonTapped
-        case incrementButtonTapped
-        case decrementButtonTappedFetch(Int)
-        case incrementButtonTappedFetch(Int)
     }
 }
 
 extension CounterState {
   var view: CounterView.State {
-    .init(count: self.count, errorMessage: self.errorMessage)
+    .init(count: self.count)
   }
-}
-
-extension CounterView.Action {
-    var feature: CounterAction {
-        switch self {
-        case .decrementButtonTapped:
-            return .decrementButtonTapped
-        case .incrementButtonTapped:
-            return .incrementButtonTapped
-        case let .decrementButtonTappedFetch(counter):
-            return .decrementButtonTappedFetch(counter)
-        case let .incrementButtonTappedFetch(counter):
-            return .incrementButtonTappedFetch(counter)
-        }
-    }
 }
 
 struct AppView_Previews: PreviewProvider {

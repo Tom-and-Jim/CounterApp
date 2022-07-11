@@ -13,7 +13,7 @@ struct EditCounterView: View {
     let store: Store<CounterState, CounterAction>
 
     var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store.scope(state: \.editView, action: \EditCounterView.Action.feature)) { viewStore in
             VStack {
                 Text("\(viewStore.count)")
                     .font(.title)
@@ -45,6 +45,41 @@ struct EditCounterView: View {
                         .foregroundColor(viewStore.errorMessage == nil ? .black : .red)
                 }
             }
+        }
+    }
+}
+
+extension EditCounterView {
+    struct State: Equatable {
+        var count = 0
+        var errorMessage: String?
+    }
+    
+    enum Action: Equatable {
+        case decrementButtonTapped
+        case incrementButtonTapped
+        case decrementButtonTappedFetch(Int)
+        case incrementButtonTappedFetch(Int)
+    }
+}
+
+extension CounterState {
+  var editView: EditCounterView.State {
+    .init(count: self.count, errorMessage: self.errorMessage)
+  }
+}
+
+extension EditCounterView.Action {
+    var feature: CounterAction {
+        switch self {
+        case .decrementButtonTapped:
+            return .decrementButtonTapped
+        case .incrementButtonTapped:
+            return .incrementButtonTapped
+        case let .decrementButtonTappedFetch(counter):
+            return .decrementButtonTappedFetch(counter)
+        case let .incrementButtonTappedFetch(counter):
+            return .incrementButtonTappedFetch(counter)
         }
     }
 }

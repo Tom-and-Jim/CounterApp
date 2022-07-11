@@ -27,24 +27,21 @@ class CounterAppUITests: XCTestCase {
     }
 
     func testLocalIncAndDec() throws {
-        app.buttons["Edit"].tap()
-        let incButton = app.buttons["+"]
-        incButton.tap()
-        XCTAssertTrue(app.staticTexts["1"].waitForExistence(timeout: 0.5))
-        
-        let decButton = app.buttons["-"]
-        decButton.tap()
-        XCTAssertTrue(app.staticTexts["0"].waitForExistence(timeout: 0.5))
+        buttonCase(buttonTitle: "+", expectedText: "1")
+        buttonCase(buttonTitle: "-", expectedText: "0")
     }
     
     func testEffectIncAndDec() throws {
+        buttonCase(buttonTitle: "Inc", expectedText: "1")
+        buttonCase(buttonTitle: "Dec", expectedText: "0")
+    }
+    
+    private func buttonCase(buttonTitle: String, expectedText: String) {
         app.buttons["Edit"].tap()
-        let incButton = app.buttons["Inc"]
+        let incButton = app.buttons[buttonTitle]
         incButton.tap()
-        XCTAssertTrue(app.staticTexts["1"].waitForExistence(timeout: 0.5))
-        
-        let decButton = app.buttons["Dec"]
-        decButton.tap()
-        XCTAssertTrue(app.staticTexts["0"].waitForExistence(timeout: 0.5))
+        XCTAssertTrue(app.staticTexts[expectedText].waitForExistence(timeout: 0.5))
+        app.buttons["Back"].tap()
+        XCTAssertTrue(app.staticTexts[expectedText].waitForExistence(timeout: 0.5))
     }
 }

@@ -13,14 +13,12 @@ struct CounterView: View {
     let store: Store<CounterState, CounterAction>
     
     var body: some View {
-        WithViewStore(store.scope(state: \.view)) { viewStore in
-            NavigationView {
-                VStack {
-                    Text("\(viewStore.count)")
-                        .font(.title)
-                        .padding()
-                    NavigationLink("Edit", destination: EditCounterView(store: store))
-                }
+        WithViewStore(store.scope(state: { counterState in counterState.view })) { viewStore in
+            VStack {
+                Text("\(viewStore.count)")
+                    .font(.title)
+                    .padding()
+                NavigationLink("Edit", destination: EditCounterView(store: store))
             }
         }
     }
@@ -28,6 +26,6 @@ struct CounterView: View {
 
 struct AppView_Previews: PreviewProvider {
     static var previews: some View {
-        CounterView(store: APP_STORE.scope(state: \.counter, action: AppAction.counter))
+        CounterView(store: appStore.scope(state: \AppState.counter, action: AppAction.counter))
     }
 }

@@ -8,14 +8,13 @@
 import ComposableArchitecture
 
 // MARK: - All
-struct CounterState: Equatable {
+struct CounterState: Equatable, Identifiable {
+    var id: UUID
     var count = 0
     var errorMessage: String?
 }
 
 enum CounterAction: Equatable {
-    case decrementButtonTapped
-    case incrementButtonTapped
     case decrementButtonTappedFetch(Int)
     case incrementButtonTappedFetch(Int)
     case numberChangeResponse(Result<Int, ApiError>)
@@ -30,24 +29,15 @@ struct CounterEnvironment {
 let counterEnvironment = CounterEnvironment(
     mainQueue: .main,
     increment: { count, max in
-        count + 1 < max ? Effect(value: count + 1) : Effect(error: ApiError())
+        count + 1 > max ? Effect(error: ApiError()) : Effect(value: count + 1)
     },
     decrement: { count, min in
-        count - 1 > min ? Effect(value: count - 1) : Effect(error: ApiError())
+        count - 1 < min ? Effect(error: ApiError()) : Effect(value: count - 1)
     }
 )
 
-let counterReducer = Reducer<CounterState, CounterAction, CounterEnvironment> {
-    state, action, environment in
+let counterReducer = Reducer<CounterState, CounterAction, CounterEnvironment> { state, action, environment in
     switch action {
-        case .decrementButtonTapped:
-            state.count -= 1
-            return .none
-
-        case .incrementButtonTapped:
-            state.count += 1
-            return .none
-
         case let .decrementButtonTappedFetch(min):
             return environment.decrement(state.count, min)
                 .receive(on: environment.mainQueue)
@@ -70,7 +60,6 @@ let counterReducer = Reducer<CounterState, CounterAction, CounterEnvironment> {
             return .none
     }
 }
-
 
 // MARK: - CounterView
 
@@ -95,8 +84,6 @@ extension EditCounterView {
     }
     
     enum Action: Equatable {
-        case decrementButtonTapped
-        case incrementButtonTapped
         case decrementButtonTappedFetch(Int)
         case incrementButtonTappedFetch(Int)
     }
@@ -111,10 +98,6 @@ extension CounterState {
 extension EditCounterView.Action {
     var feature: CounterAction {
         switch self {
-        case .decrementButtonTapped:
-            return .decrementButtonTapped
-        case .incrementButtonTapped:
-            return .incrementButtonTapped
         case let .decrementButtonTappedFetch(counter):
             return .decrementButtonTappedFetch(counter)
         case let .incrementButtonTappedFetch(counter):

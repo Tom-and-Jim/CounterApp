@@ -1,5 +1,5 @@
 //
-//  APP-TCA.swift
+//  AppCore.swift
 //  CounterApp
 //
 //  Created by QinChao Xu on 2022/7/8.
@@ -9,10 +9,12 @@ import ComposableArchitecture
 
 struct AppState: Equatable {
     var counter: CounterState
+    var lock: IdentifiedArrayOf<CounterState> = []
 }
 
 enum AppAction: Equatable {
     case counter(CounterAction)
+    case lock(id: CounterState.ID, action: CounterAction)
 }
 
 struct AppEnvironment {
@@ -24,11 +26,23 @@ let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
         state: \.counter,
         action: /AppAction.counter,
         environment: { $0.counter }
+    ),
+    counterReducer.forEach(
+        state: \.lock,
+        action: /AppAction.lock(id:action:),
+        environment: { _ in counterEnvironment }
     )
 )
 
-let APP_STORE = Store<AppState, AppAction>(
-    initialState: AppState(counter: CounterState()),
+let appStore = Store<AppState, AppAction>(
+    initialState: AppState(
+        counter: CounterState(id: UUID()),
+        lock: [
+            CounterState(id: UUID()),
+            CounterState(id: UUID()),
+            CounterState(id: UUID())
+        ]
+    ),
     reducer: appReducer,
     environment: AppEnvironment(
         counter: counterEnvironment

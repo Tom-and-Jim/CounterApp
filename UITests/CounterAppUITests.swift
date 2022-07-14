@@ -25,18 +25,19 @@ class CounterAppUITests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-
-    func testLocalIncAndDec() throws {
-        buttonCase(buttonTitle: "+", expectedText: "1")
-        buttonCase(buttonTitle: "-", expectedText: "0")
+    
+    func testEffectInc() throws {
+        buttonCase(buttonTitle: "Inc", expectedText: "1")
     }
     
-    func testEffectIncAndDec() throws {
+    func testEffectDec() throws {
         buttonCase(buttonTitle: "Inc", expectedText: "1")
+        app.buttons["Back"].tap()
         buttonCase(buttonTitle: "Dec", expectedText: "0")
     }
     
     private func buttonCase(buttonTitle: String, expectedText: String) {
+        app.buttons["CounterView"].tap()
         app.buttons["Edit"].tap()
         let incButton = app.buttons[buttonTitle]
         incButton.tap()

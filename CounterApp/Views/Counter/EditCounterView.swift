@@ -9,33 +9,26 @@ import SwiftUI
 import ComposableArchitecture
 import StoreKit
 
+let minEditCounterView = -5
+let maxEditCounterView = 5
+
 struct EditCounterView: View {
     let store: Store<CounterState, CounterAction>
 
     var body: some View {
-        WithViewStore(store.scope(state: \.editView, action: \EditCounterView.Action.feature)) { viewStore in
+        WithViewStore(store.scope(
+            state: { counterState in counterState.editView },
+            action: { (editCounterViewAction: EditCounterView.Action) in editCounterViewAction.feature })
+        ) { viewStore in
             VStack {
-                Text("\(viewStore.count)")
-                    .font(.title)
-                    .padding()
                 HStack {
-                    Text("Local:")
-                        .font(.title)
-                        .padding()
-                    Button("-") {
-                        viewStore.send(.decrementButtonTapped)
-                    }.padding()
-                    Button("+") { viewStore.send(.incrementButtonTapped)
-                    }.padding()
-                }
-                HStack {
-                    Text("Effect:")
-                        .font(.title)
-                        .padding()
                     Button("Dec") {
-                        viewStore.send(.decrementButtonTappedFetch(Config.COUNT_MIN))
+                        viewStore.send(.decrementButtonTappedFetch(minEditCounterView))
                     }.padding()
-                    Button("Inc") { viewStore.send(.incrementButtonTappedFetch(Config.COUNT_MAX))
+                    Text("\(viewStore.count)")
+                        .font(.title)
+                        .padding()
+                    Button("Inc") { viewStore.send(.incrementButtonTappedFetch(maxEditCounterView))
                     }.padding()
                 }
                 HStack {
@@ -51,6 +44,6 @@ struct EditCounterView: View {
 
 struct EditCounter_Previews: PreviewProvider {
     static var previews: some View {
-        EditCounterView(store: APP_STORE.scope(state: \.counter, action: AppAction.counter))
+        EditCounterView(store: appStore.scope(state: \AppState.counter, action: AppAction.counter))
     }
 }

@@ -15,7 +15,7 @@ class CounterAppTests: XCTestCase {
 
     override func setUp() {
         testStore = TestStore(
-            initialState: AppState(counter: CounterState(count: 0, errorMessage: nil)),
+            initialState: AppState(counter: CounterState(id: UUID(), count: 0, errorMessage: nil)),
             reducer: appReducer,
             environment: AppEnvironment(
                 counter: CounterEnvironment(
@@ -30,19 +30,6 @@ class CounterAppTests: XCTestCase {
             )
         )
     }
-
-    func testCounterIncLocal() {
-        testStore.send(AppAction.counter(EditCounterView.Action.incrementButtonTapped.feature)) {
-            $0.counter.count = 1
-        }
-    }
-
-    func testCounterDecLocal() {
-        testStore.send(AppAction.counter(EditCounterView.Action.decrementButtonTapped.feature)) {
-            $0.counter.count = -1
-        }
-    }
-
 
     func testCounterIncFetch() {
         testStore.send(AppAction.counter(EditCounterView.Action.incrementButtonTappedFetch(2).feature))

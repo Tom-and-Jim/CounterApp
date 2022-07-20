@@ -9,12 +9,12 @@ import ComposableArchitecture
 
 struct AppState: Equatable {
     var counter: CounterState
-    var lock: IdentifiedArrayOf<CounterState> = []
+    var lock: LockState
 }
 
 enum AppAction: Equatable {
     case counter(CounterAction)
-    case lock(id: CounterState.ID, action: CounterAction)
+    case lock(LockAction)
 }
 
 struct AppEnvironment {
@@ -27,21 +27,25 @@ let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
         action: /AppAction.counter,
         environment: { $0.counter }
     ),
-    counterReducer.forEach(
+    lockReducer.pullback(
         state: \.lock,
-        action: /AppAction.lock(id:action:),
-        environment: { _ in counterEnvironment }
+        action: /AppAction.lock,
+        environment: { .init(counter: $0.counter) }
     )
 )
 
 let appStore = Store<AppState, AppAction>(
     initialState: AppState(
         counter: CounterState(id: UUID()),
-        lock: [
-            CounterState(id: UUID()),
-            CounterState(id: UUID()),
-            CounterState(id: UUID())
-        ]
+        lock: .init(
+            digitals: [
+                CounterState(id: UUID()),
+                CounterState(id: UUID()),
+                CounterState(id: UUID())
+            ],
+            codes: [9, 5, 7],
+            unlock: false
+        )
     ),
     reducer: appReducer,
     environment: AppEnvironment(

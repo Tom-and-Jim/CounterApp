@@ -10,6 +10,7 @@ import ComposableArchitecture
 
 struct MainView: View {
     let store: Store<AppState, AppAction>
+    @State private var showLock = false
     
     var body: some View {
         WithViewStore(store) { viewStore in
@@ -23,9 +24,12 @@ struct MainView: View {
                         ))
                     }
                     .padding()
-                    
-                    NavigationLink("LockView") {
-                        LockView(store: store)
+
+                    Button("LockView") {
+                        showLock.toggle()
+                    }
+                    .sheet(isPresented: $showLock) {
+                        LockView(store: store.scope(state: \.lock, action: AppAction.lock))
                     }
                     .padding()
                 }

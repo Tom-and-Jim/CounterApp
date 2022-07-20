@@ -9,8 +9,8 @@ import SwiftUI
 import ComposableArchitecture
 import StoreKit
 
-let minEditCounterView = -5
-let maxEditCounterView = 5
+let minEditCounterView = 0
+let maxEditCounterView = 10
 
 struct EditCounterView: View {
     let store: Store<CounterState, CounterAction>

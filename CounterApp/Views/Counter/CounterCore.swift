@@ -9,7 +9,7 @@ import ComposableArchitecture
 
 // MARK: - All
 struct CounterState: Equatable, Identifiable {
-    var id: UUID
+    let id: UUID
     var count = 0
     var errorMessage: String?
 }

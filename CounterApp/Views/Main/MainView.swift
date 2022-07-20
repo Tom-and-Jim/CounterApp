@@ -16,13 +16,34 @@ struct MainView: View {
         WithViewStore(store) { viewStore in
             NavigationView {
                 VStack {
-                    NavigationLink("CounterView") {
-                        CounterView(store: .init(
-                            initialState: viewStore.counter,
-                            reducer: counterReducer,
-                            environment: counterEnvironment
-                        ))
-                    }
+//                    NavigationLink("CounterView") {
+//                        // This behaves normal.
+////                        CounterView(store: .init(
+////                            initialState: viewStore.counter,
+////                            reducer: counterReducer,
+////                            environment: counterEnvironment
+////                        ))
+//
+//                        // This will cause the bug.
+//                        CounterView(store: store.scope(state: \.counter, action: AppAction.counter))
+//                    }
+//                    .padding()
+
+                    NavigationLink(
+                        "CounterView",
+                        isActive: viewStore.binding(
+                            get: \.counterActive,
+                            send: AppAction.setCounterActive
+                        ),
+                        destination: {
+                            CounterView(
+                                store: store.scope(
+                                    state: \.counter,
+                                    action: AppAction.counter
+                                )
+                            )
+                        }
+                    )
                     .padding()
 
                     Button("LockView") {

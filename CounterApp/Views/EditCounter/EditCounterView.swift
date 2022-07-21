@@ -23,12 +23,12 @@ struct EditCounterView: View {
             VStack {
                 HStack {
                     Button("Dec") {
-                        viewStore.send(.decrementButtonTappedFetch(minEditCounterView))
+                        viewStore.send(.decrement)
                     }.padding()
                     Text("\(viewStore.count)")
                         .font(.title)
                         .padding()
-                    Button("Inc") { viewStore.send(.incrementButtonTappedFetch(maxEditCounterView))
+                    Button("Inc") { viewStore.send(.increment)
                     }.padding()
                 }
                 HStack {
@@ -42,8 +42,38 @@ struct EditCounterView: View {
     }
 }
 
-struct EditCounter_Previews: PreviewProvider {
-    static var previews: some View {
-        EditCounterView(store: appStore.scope(state: \AppState.counter, action: AppAction.counter))
+extension EditCounterView {
+    struct State: Equatable {
+        var count = 0
+        var errorMessage: String?
+    }
+
+    enum Action: Equatable {
+        case decrement
+        case increment
     }
 }
+
+extension CounterState {
+  var editView: EditCounterView.State {
+    .init(count: self.count, errorMessage: self.errorMessage)
+  }
+}
+
+extension EditCounterView.Action {
+    var feature: CounterAction {
+        switch self {
+        case .decrement:
+            return .decrement
+        case .increment:
+            return .increment
+        }
+    }
+}
+
+
+//struct EditCounter_Previews: PreviewProvider {
+//    static var previews: some View {
+//        EditCounterView(store: appStore.scope(state: \RootState.counter, action: RootAction.counter))
+//    }
+//}

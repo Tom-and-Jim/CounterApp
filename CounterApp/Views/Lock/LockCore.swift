@@ -19,7 +19,7 @@ enum LockAction: Equatable {
 }
 
 struct LockEnvironment {
-    var counter: CounterEnvironment
+    var counter: CounterClient.Interface
 }
 
 let lockReducer: Reducer<LockState, LockAction, LockEnvironment> = .combine(
@@ -30,7 +30,8 @@ let lockReducer: Reducer<LockState, LockAction, LockEnvironment> = .combine(
     ),
     Reducer { state, action, _ in
         switch action {
-        case .digitalView(_, .numberChangeResponse(.success(_))):
+        case .digitalView(_, .incrementComplete(.success(_))),
+             .digitalView(_, .decrementComplete(.success(_))):
             state.unlock = state.digitals.map(\.count) == state.codes
             return .none
         case .digitalView:

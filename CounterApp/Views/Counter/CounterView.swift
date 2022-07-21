@@ -18,14 +18,39 @@ struct CounterView: View {
                 Text("\(viewStore.count)")
                     .font(.title)
                     .padding()
-                NavigationLink("Edit", destination: EditCounterView(store: store))
+                NavigationLink(
+                    "Edit",
+                    isActive: viewStore.binding(
+                        get: \.editCounterActive,
+                        send: CounterAction.setEditCounter
+                    ),
+                    destination: {
+                        EditCounterView(store: store)
+                    }
+                )
             }
         }
     }
 }
 
-struct AppView_Previews: PreviewProvider {
-    static var previews: some View {
-        CounterView(store: appStore.scope(state: \AppState.counter, action: AppAction.counter))
+extension CounterView {
+    struct State: Equatable {
+        var count = 0
+        var editCounterActive = false
     }
 }
+
+extension CounterState {
+  var view: CounterView.State {
+    .init(
+        count: self.count,
+        editCounterActive: self.editCounterActive
+    )
+  }
+}
+
+//struct CounterView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CounterView(store: appStore.scope(state: \AppState.root.counter, action: AppAction.rootView(RootAction)))
+//    }
+//}

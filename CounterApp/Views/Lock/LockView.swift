@@ -41,8 +41,8 @@ struct LockView: View {
     }
 }
 
-struct LockView_Previews: PreviewProvider {
-    static var previews: some View {
-        LockView(store: appStore.scope(state: \.lock, action: AppAction.lock))
-    }
-}
+//struct LockView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        LockView(store: appStore.scope(state: \.lock, action: RootAction.lock))
+//    }
+//}

@@ -11,13 +11,13 @@ import XCTest
 
 class CounterAppTests: XCTestCase {
     let scheduler = DispatchQueue.test
-    var testStore: TestStore<AppState, AppState, AppAction, AppAction, AppEnvironment>!
+    var testStore: TestStore<RootState, RootState, RootAction, RootAction, RootEnvironment>!
 
     override func setUp() {
         testStore = TestStore(
-            initialState: AppState(counter: CounterState(id: UUID(), count: 0, errorMessage: nil)),
-            reducer: appReducer,
-            environment: AppEnvironment(
+            initialState: RootState(counter: CounterState(id: UUID(), count: 0, errorMessage: nil)),
+            reducer: rootReducer,
+            environment: RootEnvironment(
                 counter: CounterEnvironment(
                     mainQueue: scheduler.eraseToAnyScheduler(),
                     increment: { count, max in
@@ -32,30 +32,30 @@ class CounterAppTests: XCTestCase {
     }
 
     func testCounterIncFetch() {
-        testStore.send(AppAction.counter(EditCounterView.Action.incrementButtonTappedFetch(2).feature))
+        testStore.send(RootAction.counter(EditCounterView.Action.incrementButtonTappedFetch(2).feature))
         scheduler.advance()
-        testStore.receive(AppAction.counter(.numberChangeResponse(.success(1)))) {
+        testStore.receive(RootAction.counter(.numberChangeResponse(.success(1)))) {
             $0.counter.count = 1
         }
         
-        testStore.send(AppAction.counter(EditCounterView.Action.incrementButtonTappedFetch(2).feature))
+        testStore.send(RootAction.counter(EditCounterView.Action.incrementButtonTappedFetch(2).feature))
         scheduler.advance()
-        testStore.receive(AppAction.counter(.numberChangeResponse(.failure(ApiError())))) {
+        testStore.receive(RootAction.counter(.numberChangeResponse(.failure(ApiError())))) {
             $0.counter.count = 1
             $0.counter.errorMessage = "Sorry, you are out of range."
         }
     }
 
     func testCounterDecFetch() {
-        testStore.send(AppAction.counter(EditCounterView.Action.decrementButtonTappedFetch(-2).feature))
+        testStore.send(RootAction.counter(EditCounterView.Action.decrementButtonTappedFetch(-2).feature))
         scheduler.advance()
-        testStore.receive(AppAction.counter(.numberChangeResponse(.success(-1)))) {
+        testStore.receive(RootAction.counter(.numberChangeResponse(.success(-1)))) {
             $0.counter.count = -1
         }
         
-        testStore.send(AppAction.counter(EditCounterView.Action.decrementButtonTappedFetch(-2).feature))
+        testStore.send(RootAction.counter(EditCounterView.Action.decrementButtonTappedFetch(-2).feature))
         scheduler.advance()
-        testStore.receive(AppAction.counter(.numberChangeResponse(.failure(ApiError())))) {
+        testStore.receive(RootAction.counter(.numberChangeResponse(.failure(ApiError())))) {
             $0.counter.count = -1
             $0.counter.errorMessage = "Sorry, you are out of range."
         }

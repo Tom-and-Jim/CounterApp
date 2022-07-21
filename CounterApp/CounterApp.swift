@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct CounterApp: App {
     var body: some Scene {
         WindowGroup {
-            MainView(store: appStore)
+            AppView(store: appStore)
         }
     }
 }

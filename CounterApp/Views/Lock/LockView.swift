@@ -21,20 +21,8 @@ struct LockView: View {
                 Text("Unlock:\(viewStore.unlock ? "Yes" : "No")")
                 ForEachStore(
                     self.store.scope(state: \.digitals, action: LockAction.digitalView)
-                ) { lockNumberStore in
-//                    WithViewStore(lockNumberStore) { lockNumberViewStore in
-//                        HStack {
-//                            Button("-") {
-//                                lockNumberViewStore.send(.decrementButtonTappedFetch(minLockView))
-//                            }.padding()
-//                            Text("\(lockNumberViewStore.count)")
-//                                .font(.title)
-//                                .padding()
-//                            Button("+") { lockNumberViewStore.send(.incrementButtonTappedFetch(maxLockView))
-//                            }.padding()
-//                        }
-//                    }
-                    EditCounterView(store: lockNumberStore)
+                ) {
+                    EditCounterView(store: $0)
                 }
             }
         }

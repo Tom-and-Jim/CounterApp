@@ -18,15 +18,21 @@ struct RootState: Equatable {
         codes: [9, 5, 7],
         unlock: false
     )
+    var users: UsersState?
+
     var counterActive: Bool = false
     var lockActive: Bool = false
+    var usersActive: Bool = false
 }
 
 enum RootAction: Equatable {
     case counter(CounterAction)
     case lock(LockAction)
+    case users(UsersAction)
+
     case setCounterActive(Bool)
     case setLockActive(Bool)
+    case setUsersActive(Bool)
 }
 
 struct RootEnvironment {
@@ -51,6 +57,20 @@ let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combine(
             return .none
         case .setLockActive(let active):
             state.lockActive = active
+            return .none
+        case .setUsersActive(let active):
+            if active {
+                state.users = UsersState(
+                    users: [
+                        UserDetailState(id: UUID(), user: UserState(firstName: "f1", lastName: "l1", email: "e1", age: 1, job: "j1"), editUserActive: false),
+                        UserDetailState(id: UUID(), user: UserState(firstName: "f2", lastName: "l2", email: "e2", age: 2, job: "j2"), editUserActive: false)
+                    ],
+                    userDetailActive: false
+                )
+            } else {
+                state.users = nil
+            }
+            state.usersActive = active
             return .none
         default:
             return .none

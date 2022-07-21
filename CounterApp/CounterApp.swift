@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct CounterApp: App {
     var body: some Scene {
         WindowGroup {
-            CounterView(store: APP_STORE.scope(state: \.counter, action: AppAction.counter))
+            AppView(store: appStore)
         }
     }
 }

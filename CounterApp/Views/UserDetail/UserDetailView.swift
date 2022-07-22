@@ -14,32 +14,17 @@ struct UserDetailView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack(alignment: .leading, spacing: 5) {
-                Text("First name: \(viewStore.user.firstName)").padding()
-                Text("Last name: \(viewStore.user.lastName)").padding()
-                Text("Email: \(viewStore.user.email)").padding()
-                Text("Age: \(viewStore.user.age)").padding()
-                Text("Job: \(viewStore.user.job)").padding()
-
-                Button("Edit") {
-                    print("viewStore.send(.setEditUserActive(true))")
-                    viewStore.send(.setEditUserActive(true))
-                }
+                Text("First name: \(viewStore.user.user.firstName)").padding()
+                Text("Last name: \(viewStore.user.user.lastName)").padding()
+                Text("Email: \(viewStore.user.user.email)").padding()
+                Text("Age: \(viewStore.user.user.age)").padding()
+                Text("Job: \(viewStore.user.user.job)").padding()
             }
             .navigationTitle("User detail")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-//                    NavigationLink(
-//                        destination: {
-//                            EditUserView(store: store.scope(state: \.user, action: UserDetailAction.editUserView))
-//                        },
-//                        label: {
-//                            Text("Edit")
-//                        }
-//                    )
-
                     Button("Edit") {
-                        print("viewStore.send(.setEditUserActive(true))")
                         viewStore.send(.setEditUserActive(true))
                     }
                 }
@@ -50,20 +35,13 @@ struct UserDetailView: View {
                         send: UserDetailAction.setEditUserActive
                     )
             ) {
-                EditUserView(store: store.scope(state: \.user, action: UserDetailAction.editUserView))
+                EditUserView(
+                    store: store.scope(
+                        state: \.user,
+                        action: UserDetailAction.editUserView),
+                    editingUser: viewStore.user.user.copy()
+                )
             }
         }
     }
 }
-
-//struct UserDetailView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UserDetailView(store:
-//                            .init(
-//                                initialState: UserState(id: UUID(), firstName: "f1", lastName: "l1", email: "e1", age: 1, job: "j1"),
-//                                reducer: Reducer<UserState, UserAction, UserEnvironment> { _,_,_ in return .none },
-//                                environment: UserEnvironment()
-//                            )
-//        )
-//    }
-//}

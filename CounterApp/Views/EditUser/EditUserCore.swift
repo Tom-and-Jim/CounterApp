@@ -8,40 +8,21 @@
 import Foundation
 import ComposableArchitecture
 
-struct UserState: Equatable {
-    var firstName: String
-    var lastName: String
-    var email: String
-    var age: Int
-    var job: String
+struct EditUserState: Equatable {
+    var user: User
 }
 
-enum UserAction: Equatable {
-    case updateFirstName(String)
-    case updateLastName(String)
-    case updateEmail(String)
-    case updateAge(String)
-    case updateJob(String)
+enum EditUserAction: Equatable {
+    case updateUser(User)
+    case dismiss
 }
 
-struct UserEnvironment {}
-
-let userReducer = Reducer<UserState, UserAction, UserEnvironment> { state, action, environment in
+let editUserReducer = Reducer<EditUserState, EditUserAction, UserClient.Interface> { state, action, _ in
     switch action {
-    case .updateFirstName(let firstName):
-        state.firstName = firstName
+    case .updateUser(let newUser):
+        state.user = newUser
         return .none
-    case .updateLastName(let LastName):
-        state.lastName = LastName
-        return .none
-    case .updateEmail(let email):
-        state.email = email
-        return .none
-    case .updateAge(let age):
-        state.age = Int(age) ?? 0
-        return .none
-    case .updateJob(let job):
-        state.job = job
+    case .dismiss:
         return .none
     }
 }

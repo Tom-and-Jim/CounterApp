@@ -37,6 +37,7 @@ enum RootAction: Equatable {
 
 struct RootEnvironment {
     var counter: CounterClient.Interface
+    var user: UserClient.Interface
 }
 
 let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combine(
@@ -50,7 +51,15 @@ let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combine(
         action: /RootAction.lock,
         environment: { .init(counter: $0.counter) }
     ),
+    usersReducer.optional().pullback(
+        state: \.users,
+        action: /RootAction.users,
+        environment: { .init(user: $0.user, mainQueue: .main) }
+    ),
     Reducer { state, action, _ in
+
+        enum TimerId {}
+
         switch action {
         case .setCounterActive(let active):
             state.counterActive = active
@@ -60,13 +69,7 @@ let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combine(
             return .none
         case .setUsersActive(let active):
             if active {
-                state.users = UsersState(
-                    users: [
-                        UserDetailState(id: UUID(), user: UserState(firstName: "f1", lastName: "l1", email: "e1", age: 1, job: "j1"), editUserActive: false),
-                        UserDetailState(id: UUID(), user: UserState(firstName: "f2", lastName: "l2", email: "e2", age: 2, job: "j2"), editUserActive: false)
-                    ],
-                    userDetailActive: false
-                )
+                state.users = .fake()
             } else {
                 state.users = nil
             }

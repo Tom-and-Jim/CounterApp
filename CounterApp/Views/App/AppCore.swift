@@ -23,13 +23,17 @@ enum AppAction: Equatable {
 
 struct AppEnvironment {
     var counterClient: CounterClient.Interface
+    var userClient: UserClient.Interface
 }
 
 // MARK: - children environment derivations
 
 extension AppEnvironment {
     var root: RootEnvironment {
-        .init(counter: self.counterClient)
+        .init(
+            counter: self.counterClient,
+            user: self.userClient
+        )
     }
 }
 
@@ -41,13 +45,4 @@ let appReducer: Reducer<AppState, AppAction, AppEnvironment> = .combine(
         action: /AppAction.rootView,
         environment: \.root
     )
-)
-
-// MARK: - appStore
-
-// We set appStore here as global in order to pass to PreviewProvider easily
-let appStore = Store<AppState, AppAction>(
-    initialState: AppState(),
-    reducer: appReducer,
-    environment: AppEnvironment()
 )

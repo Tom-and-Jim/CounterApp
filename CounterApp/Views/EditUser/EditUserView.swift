@@ -10,17 +10,33 @@ import Combine
 import ComposableArchitecture
 
 struct EditUserView: View {
-    let store: Store<UserState, UserAction>
+    let store: Store<EditUserState, EditUserAction>
+    @State var editingUser: User
 
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
                 HStack {
+                    Button("Cancel") {
+                        viewStore.send(.dismiss)
+                    }
+                    .padding()
+
+                    Spacer()
+
+                    Button("Save") {
+                        viewStore.send(.updateUser(editingUser))
+                        viewStore.send(.dismiss)
+                    }
+                    .padding()
+                }
+                Spacer()
+                HStack {
                     Text("First name:")
                     Spacer()
                     TextField(
                         "First name",
-                        text: viewStore.binding(get: \.firstName, send: UserAction.updateFirstName)
+                        text: $editingUser.firstName
                     )
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 200)
@@ -33,7 +49,7 @@ struct EditUserView: View {
                     Spacer()
                     TextField(
                         "Last name",
-                        text: viewStore.binding(get: \.lastName, send: UserAction.updateLastName)
+                        text: $editingUser.lastName
                     )
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 200)
@@ -46,7 +62,7 @@ struct EditUserView: View {
                     Spacer()
                     TextField(
                         "Email",
-                        text: viewStore.binding(get: \.email, send: UserAction.updateEmail)
+                        text: $editingUser.email
                     )
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 200)
@@ -59,7 +75,8 @@ struct EditUserView: View {
                     Spacer()
                     TextField(
                         "Age",
-                        text: viewStore.binding(get: { userState in "\(userState.age)" }, send: UserAction.updateAge)
+                        value: $editingUser.age,
+                        formatter: NumberFormatter()
                     )
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 200)
@@ -73,7 +90,7 @@ struct EditUserView: View {
                     Spacer()
                     TextField(
                         "Job",
-                        text: viewStore.binding(get: \.job, send: UserAction.updateJob)
+                        text: $editingUser.job
                     )
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 200)
@@ -84,14 +101,3 @@ struct EditUserView: View {
         }
     }
 }
-
-//struct EditUserView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        EditUserView(store: .init(
-//            initialState: UserState(id: UUID(), firstName: "f1", lastName: "l1", email: "e1", age: 1, job: "j1"),
-//            reducer: Reducer<UserState, UserAction, UserEnvironment> { _,_,_ in return .none },
-//            environment: UserEnvironment()
-//        )
-//        )
-//    }
-//}

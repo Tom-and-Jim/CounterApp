@@ -18,13 +18,13 @@ enum UsersAction: Equatable {
 
     case setUserDetailActive(Bool)
 
-    case startUpdateUserDetailTimer(UserDetailState.ID)
-    case stopUpdateUserDetailTimer
-    case timerTicked(UserDetailState.ID)
+    case startTimerSchedule
+    case stopTimerSchedule
+    case timerTicked
 }
 
 struct UsersEnvironment {
-    var user: UserDetailEnvironment
+    var user: UserClient.Interface
     var mainQueue: AnySchedulerOf<DispatchQueue>
 }
 
@@ -32,7 +32,7 @@ let usersReducer: Reducer<UsersState, UsersAction, UsersEnvironment> = .combine(
     userDetailReducer.forEach(
         state: \.users,
         action: /UsersAction.usersView,
-        environment: \.user
+        environment: { usersEnv in .init(user: usersEnv.user)}
     ),
     Reducer<UsersState, UsersAction, UsersEnvironment> { state, action, environment in
         struct TimerId: Hashable {}
@@ -41,14 +41,16 @@ let usersReducer: Reducer<UsersState, UsersAction, UsersEnvironment> = .combine(
         case let .setUserDetailActive(active):
             state.userDetailActive = active
             return .none
-        case .startUpdateUserDetailTimer(let id):
+        case .startTimerSchedule:
             return Effect.timer(id: TimerId(), every: 5, tolerance: nil, on: environment.mainQueue, options: nil)
-                .map { _ in .timerTicked(id) }
-        case .stopUpdateUserDetailTimer:
-            return .none
-        case .timerTicked(let id):
-            if var target = state.users.first(where: { userState in userState.id == id }) {
-                target.user.age = 100
+                .map { _ in .timerTicked }
+        case .stopTimerSchedule:
+            return .cancel(id: TimerId.self)
+        case .timerTicked:
+            if state.users.count > 0 {
+                var firstItem = state.users.first!
+                firstItem.user.user.lastName = Randoms.randomFakeLastName()
+                state.users.update(firstItem, at: 0)
             }
             return .none
         default:

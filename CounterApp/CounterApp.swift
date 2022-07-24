@@ -10,9 +10,14 @@ import ComposableArchitecture
 
 @main
 struct CounterApp: App {
+    let store = Store<AppState, AppAction>(
+        initialState: AppState(),
+        reducer: appReducer,
+        environment: AppEnvironment()
+    )
     var body: some Scene {
         WindowGroup {
-            AppView(store: appStore)
+            AppView(store: store)
         }
     }
 }

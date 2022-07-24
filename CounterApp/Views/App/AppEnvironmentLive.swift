@@ -10,5 +10,6 @@ import Foundation
 extension AppEnvironment {
     init() {
         self.counterClient = .live
+        self.userClient = .live
     }
 }

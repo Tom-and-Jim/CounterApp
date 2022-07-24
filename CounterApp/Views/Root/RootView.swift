@@ -43,6 +43,24 @@ struct RootView: View {
                     LockView(store: store.scope(state: \.lock, action: RootAction.lock))
                 }
                 .padding()
+
+                NavigationLink(
+                    "UsersView",
+                    isActive: viewStore.binding(
+                        get: \.usersActive,
+                        send: RootAction.setUsersActive
+                    ),
+                    destination: {
+                        IfLetStore(
+                            store.scope(
+                                    state: \.users,
+                                    action: RootAction.users
+                                ),
+                            then: UsersView.init
+                        )
+                    }
+                )
+                .padding()
             }
         }
     }

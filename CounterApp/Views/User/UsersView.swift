@@ -35,37 +35,26 @@ struct UsersView: View {
     var body: some View {
         WithViewStore(store) { parentViewStore in
             List {
-                ForEachStore(store.scope(state: \.users, action: UsersAction.usersView)) { viewStore in
-                    // This has bug.
-//                    NavigationLink(
-//                        isActive: parentViewStore.binding(
-//                            get: \.userDetailActive,
-//                            send: UsersAction.setUserDetailActive
-//                        ),
-//                        destination: {
-//                            UserDetailView(store: viewStore)
-//                        },
-//                        label: {
-//                            UserItemView(
-//                                store: viewStore.scope(state: \.user.user).actionless
-//                            )
-//                        }
-//                    )
-
-                    NavigationLink(
-                        destination: {
-                            UserDetailView(store: viewStore)
-                        },
-                        label: {
-                            UserItemView(
-                                store: viewStore.scope(state: \.user.user).actionless
-                            )
-                        }
-                    )
+                ForEachStore(store.scope(state: \.users, action: UsersAction.usersView)) { childStore in
+                    WithViewStore(childStore) { viewStore in
+                        NavigationLink(
+                            tag: viewStore.id,
+                            selection: parentViewStore.binding(
+                                get: \.userDetailSelection,
+                                send: UsersAction.setUserDetailSelection
+                            ),
+                            destination: {
+                                UserDetailView(store: childStore)
+                            },
+                            label: {
+                                UserItemView(
+                                    store: childStore.scope(state: \.user).actionless
+                                )
+                            }
+                        )
+                    }
                 }
             }
-            .onAppear(perform: { parentViewStore.send(.startTimerSchedule) })
-            .onDisappear(perform: { parentViewStore.send(.stopTimerSchedule) })
         }
     }
 }

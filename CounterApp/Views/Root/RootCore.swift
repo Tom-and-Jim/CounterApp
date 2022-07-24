@@ -33,9 +33,15 @@ enum RootAction: Equatable {
     case setCounterActive(Bool)
     case setLockActive(Bool)
     case setUsersActive(Bool)
+
+    case startTimerSchedule
+    case stopTimerSchedule
+    case timerTicked
 }
 
 struct RootEnvironment {
+    var mainQueue: AnySchedulerOf<DispatchQueue>
+
     var counter: CounterClient.Interface
     var user: UserClient.Interface
 }
@@ -54,11 +60,11 @@ let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combine(
     usersReducer.optional().pullback(
         state: \.users,
         action: /RootAction.users,
-        environment: { .init(user: $0.user, mainQueue: .main) }
+        environment: { .init(user: $0.user) }
     ),
-    Reducer { state, action, _ in
+    Reducer { state, action, environment in
 
-        enum TimerId {}
+        struct TimerId: Hashable {}
 
         switch action {
         case .setCounterActive(let active):
@@ -70,10 +76,26 @@ let rootReducer: Reducer<RootState, RootAction, RootEnvironment> = .combine(
         case .setUsersActive(let active):
             if active {
                 state.users = .fake()
+                state.usersActive = active
+                return Effect(value: .startTimerSchedule)
             } else {
                 state.users = nil
+                state.usersActive = active
+                return Effect(value: .stopTimerSchedule)
             }
-            state.usersActive = active
+        case .startTimerSchedule:
+            return Effect.timer(id: TimerId(), every: 5, tolerance: nil, on: environment.mainQueue, options: nil)
+                .map { _ in .timerTicked }
+        case .stopTimerSchedule:
+            return .cancel(id: TimerId.self)
+        case .timerTicked:
+            if (state.users?.users.count ?? 0) > 0 {
+                guard var firstItem = state.users?.users.first else {
+                    return .none
+                }
+                firstItem.user.lastName = Randoms.randomFakeLastName()
+                state.users?.users.update(firstItem, at: 0)
+            }
             return .none
         default:
             return .none

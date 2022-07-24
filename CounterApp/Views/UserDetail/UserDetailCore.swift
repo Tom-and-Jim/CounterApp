@@ -10,7 +10,8 @@ import ComposableArchitecture
 
 struct UserDetailState: Equatable, Identifiable {
     let id: UUID
-    var user: EditUserState
+    var user: User
+    var editUserState: EditUserState?
     var editUserActive: Bool
 }
 
@@ -24,8 +25,8 @@ struct UserDetailEnvironment {
 }
 
 let userDetailReducer: Reducer<UserDetailState, UserDetailAction, UserDetailEnvironment> = .combine(
-    editUserReducer.pullback(
-        state: \.user,
+    editUserReducer.optional().pullback(
+        state: \.editUserState,
         action: /UserDetailAction.editUserView,
         environment: { $0.user }
     ),
@@ -33,9 +34,13 @@ let userDetailReducer: Reducer<UserDetailState, UserDetailAction, UserDetailEnvi
         switch action {
         case let .setEditUserActive(active):
             state.editUserActive = active
+            state.editUserState = .init(user: state.user)
             return .none
         case .editUserView(.dismiss):
             state.editUserActive = false
+            return .none
+        case let .editUserView(.didSave(user)):
+            state.user = user
             return .none
         default:
             return .none

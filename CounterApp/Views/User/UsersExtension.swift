@@ -13,20 +13,15 @@ extension UsersState {
             users: [
                 UserDetailState(
                     id: UUID(),
-                    user: EditUserState(
-                            user: User(firstName: "f1", lastName: "l1", email: "e1", age: 1, job: "j1")
-                        ),
+                    user: User(firstName: "f1", lastName: "l1", email: "e1", age: 1, job: "j1"),
                     editUserActive: false
                 ),
                 UserDetailState(
                     id: UUID(),
-                    user: EditUserState(
-                            user: User(firstName: "f2", lastName: "l2", email: "e2", age: 2, job: "j2")
-                        ),
+                    user: User(firstName: "f2", lastName: "l2", email: "e2", age: 2, job: "j2"),
                     editUserActive: false
                 )
-            ],
-            userDetailActive: false
+            ]
         )
     }
 }

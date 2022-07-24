@@ -31,6 +31,7 @@ struct AppEnvironment {
 extension AppEnvironment {
     var root: RootEnvironment {
         .init(
+            mainQueue: .main,
             counter: self.counterClient,
             user: self.userClient
         )

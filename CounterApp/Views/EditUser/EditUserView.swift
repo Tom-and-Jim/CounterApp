@@ -11,7 +11,6 @@ import ComposableArchitecture
 
 struct EditUserView: View {
     let store: Store<EditUserState, EditUserAction>
-    @State var editingUser: User
 
     var body: some View {
         WithViewStore(store) { viewStore in
@@ -25,7 +24,7 @@ struct EditUserView: View {
                     Spacer()
 
                     Button("Save") {
-                        viewStore.send(.updateUser(editingUser))
+                        viewStore.send(.save)
                         viewStore.send(.dismiss)
                     }
                     .padding()
@@ -36,7 +35,7 @@ struct EditUserView: View {
                     Spacer()
                     TextField(
                         "First name",
-                        text: $editingUser.firstName
+                        text: viewStore.binding(\.$user.firstName)
                     )
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 200)
@@ -49,7 +48,7 @@ struct EditUserView: View {
                     Spacer()
                     TextField(
                         "Last name",
-                        text: $editingUser.lastName
+                        text: viewStore.binding(\.$user.lastName)
                     )
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 200)
@@ -62,7 +61,7 @@ struct EditUserView: View {
                     Spacer()
                     TextField(
                         "Email",
-                        text: $editingUser.email
+                        text: viewStore.binding(\.$user.email)
                     )
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 200)
@@ -75,7 +74,7 @@ struct EditUserView: View {
                     Spacer()
                     TextField(
                         "Age",
-                        value: $editingUser.age,
+                        value: viewStore.binding(\.$user.age),
                         formatter: NumberFormatter()
                     )
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -90,7 +89,7 @@ struct EditUserView: View {
                     Spacer()
                     TextField(
                         "Job",
-                        text: $editingUser.job
+                        text: viewStore.binding(\.$user.job)
                     )
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 200)

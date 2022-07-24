@@ -9,20 +9,25 @@ import Foundation
 import ComposableArchitecture
 
 struct EditUserState: Equatable {
-    var user: User
+    @BindableState var user: User
 }
 
-enum EditUserAction: Equatable {
-    case updateUser(User)
+enum EditUserAction: Equatable, BindableAction {
+    case binding(BindingAction<EditUserState>)
+    case save
     case dismiss
+    case didSave(User)
 }
 
 let editUserReducer = Reducer<EditUserState, EditUserAction, UserClient.Interface> { state, action, _ in
     switch action {
-    case .updateUser(let newUser):
-        state.user = newUser
-        return .none
-    case .dismiss:
+    case .save:
+        return Effect(value: .didSave(state.user))
+        
+    case .dismiss,
+         .binding,
+         .didSave:
         return .none
     }
 }
+.binding()

@@ -14,11 +14,14 @@ struct UserDetailView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack(alignment: .leading, spacing: 5) {
-                Text("First name: \(viewStore.user.user.firstName)").padding()
-                Text("Last name: \(viewStore.user.user.lastName)").padding()
-                Text("Email: \(viewStore.user.user.email)").padding()
-                Text("Age: \(viewStore.user.user.age)").padding()
-                Text("Job: \(viewStore.user.user.job)").padding()
+                Group {
+                    Text("First name: \(viewStore.user.firstName)")
+                    Text("Last name: \(viewStore.user.lastName)")
+                    Text("Email: \(viewStore.user.email)")
+                    Text("Age: \(viewStore.user.age)")
+                    Text("Job: \(viewStore.user.job)")
+                }
+                .padding()
             }
             .navigationTitle("User detail")
             .navigationBarTitleDisplayMode(.inline)
@@ -35,11 +38,11 @@ struct UserDetailView: View {
                         send: UserDetailAction.setEditUserActive
                     )
             ) {
-                EditUserView(
-                    store: store.scope(
-                        state: \.user,
+                IfLetStore(
+                    store.scope(
+                        state: \.editUserState,
                         action: UserDetailAction.editUserView),
-                    editingUser: viewStore.user.user.copy()
+                    then: EditUserView.init
                 )
             }
         }
